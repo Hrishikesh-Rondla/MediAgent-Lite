@@ -4,11 +4,11 @@ FakeLLM is used via MEDIAGENT_TEST_MODE=true (set in conftest.py).
 PubMedTool._run and the extract_chain are mocked to avoid real network calls.
 """
 
-from unittest.mock import patch, MagicMock
+from unittest.mock import MagicMock, patch
 
 from mediagent_lite.agents.evidence_scanner import EvidenceScanner
-from mediagent_lite.schemas.hypothesis import DiagnosisHypothesis
 from mediagent_lite.schemas.evidence import EvidenceBundle, EvidenceRecord, PublicationType
+from mediagent_lite.schemas.hypothesis import DiagnosisHypothesis
 
 
 def _make_bundle():

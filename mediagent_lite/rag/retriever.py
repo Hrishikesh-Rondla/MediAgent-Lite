@@ -1,11 +1,11 @@
 """Qdrant local retriever with fallback ladder and term boosting."""
 
-from typing import Any
 import uuid
+from typing import Any
 
-from qdrant_client import QdrantClient
-from qdrant_client.models import Distance, VectorParams, PointStruct
 from langchain_core.documents import Document
+from qdrant_client import QdrantClient
+from qdrant_client.models import Distance, PointStruct, VectorParams
 
 from mediagent_lite.config.settings import get_settings
 from mediagent_lite.rag.embedder import BioBERTEmbeddings

@@ -4,14 +4,13 @@ This provides an interactive chat-like interface to run cases through
 the LangGraph orchestrator and visualize the internal trace.
 """
 
-import streamlit as st
-import traceback
 import os
+import traceback
 
+import streamlit as st
 
-from mediagent_lite.graph.orchestrator import build_graph
 from mediagent_lite.config.settings import get_settings
-
+from mediagent_lite.graph.orchestrator import build_graph
 
 st.set_page_config(
     page_title="MediAgent-Lite",

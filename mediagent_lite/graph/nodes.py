@@ -11,9 +11,9 @@ from typing import Any
 
 from langchain_core.runnables import RunnableConfig
 
-from mediagent_lite.schemas.state import AgentState, TraceEntry
 from mediagent_lite.agents.clarifier import ClinicalTextClarifier
 from mediagent_lite.agents.rag_analyzer import SymptomRAGAnalyzer
+from mediagent_lite.schemas.state import AgentState, TraceEntry
 
 
 def _create_trace(node_name: str, start_time: float, inputs: str, outputs: str, iteration: int) -> TraceEntry:

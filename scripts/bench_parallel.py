@@ -30,7 +30,6 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from mediagent_lite.rag.pubmed_fetcher import PubMedFetcher
 
-
 # Fixed set of queries representative of typical evidence scanner calls
 QUERIES = [
     "Myocardial Infarction chest pain",

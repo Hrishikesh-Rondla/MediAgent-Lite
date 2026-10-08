@@ -7,22 +7,21 @@ They verify that schema validation catches bad data at the boundary.
 import pytest
 from pydantic import ValidationError
 
-from mediagent_lite.schemas.clinical import StructuredCase, Symptom, Lab, Imaging
-from mediagent_lite.schemas.hypothesis import (
-    DiagnosisHypothesis,
-    HypothesisList,
-    SupportingChunk,
-)
+from mediagent_lite.schemas.clinical import Imaging, Lab, StructuredCase, Symptom
 from mediagent_lite.schemas.evidence import (
     EvidenceBundle,
     EvidenceRecord,
     PublicationType,
 )
+from mediagent_lite.schemas.hypothesis import (
+    DiagnosisHypothesis,
+    HypothesisList,
+    SupportingChunk,
+)
 from mediagent_lite.schemas.report import (
     DiagnosisReport,
     FusedReport,
 )
-
 
 # ── StructuredCase ────────────────────────────────────────────────────────────
 
@@ -225,7 +224,7 @@ class TestSettings:
 class TestLLMFactory:
     def test_fake_llm_in_test_mode(self):
         """In test mode (MEDIAGENT_TEST_MODE=true), always returns FakeLLM."""
-        from mediagent_lite.llm_factory import get_llm, FakeLLM
+        from mediagent_lite.llm_factory import FakeLLM, get_llm
         llm = get_llm("clarifier")
         assert isinstance(llm, FakeLLM)
 

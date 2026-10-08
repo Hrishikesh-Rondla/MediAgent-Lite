@@ -5,8 +5,8 @@ chunks them, embeds with BioBERT, and upserts to local Qdrant.
 Idempotent: safe to run multiple times.
 """
 
-import sys
 import os
+import sys
 from pathlib import Path
 
 # Add project root to path
@@ -15,9 +15,9 @@ sys.path.append(str(Path(__file__).parent.parent))
 from datasets import load_dataset
 
 from mediagent_lite.config.settings import get_settings
+from mediagent_lite.rag.chunker import chunk_document
 from mediagent_lite.rag.pubmed_fetcher import PubMedFetcher
 from mediagent_lite.rag.retriever import ClinicalRetriever
-from mediagent_lite.rag.chunker import chunk_document
 
 
 def ingest_pubmed(fetcher: PubMedFetcher, retriever: ClinicalRetriever, settings):

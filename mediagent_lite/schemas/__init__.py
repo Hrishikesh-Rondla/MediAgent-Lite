@@ -1,25 +1,25 @@
 from mediagent_lite.schemas.clinical import (
     ClinicalCase,
-    Symptom,
-    Lab,
     Imaging,
+    Lab,
     StructuredCase,
+    Symptom,
+)
+from mediagent_lite.schemas.evidence import (
+    EvidenceBundle,
+    EvidenceRecord,
+    PublicationType,
+    PubMedAbstract,
 )
 from mediagent_lite.schemas.hypothesis import (
     DiagnosisHypothesis,
     HypothesisList,
     SupportingChunk,
 )
-from mediagent_lite.schemas.evidence import (
-    PubMedAbstract,
-    EvidenceRecord,
-    EvidenceBundle,
-    PublicationType,
-)
 from mediagent_lite.schemas.report import (
+    ConflictFlag,
     DiagnosisReport,
     FusedReport,
-    ConflictFlag,
 )
 from mediagent_lite.schemas.state import AgentState
 

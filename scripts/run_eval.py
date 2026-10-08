@@ -40,9 +40,8 @@ os.environ.setdefault("DEFAULT_LLM_PROVIDER", os.getenv("DEFAULT_LLM_PROVIDER", 
 from datasets import load_dataset  # noqa: E402
 from tqdm import tqdm  # noqa: E402
 
-from mediagent_lite.graph.orchestrator import build_graph  # noqa: E402
 from mediagent_lite.config.settings import get_settings  # noqa: E402
-
+from mediagent_lite.graph.orchestrator import build_graph  # noqa: E402
 
 # ── Wilson score 95% CI ──────────────────────────────────────────────────────
 
@@ -107,9 +106,9 @@ def map_prediction(report, options: dict) -> str | None:
         if top_dx in text_lower or text_lower in top_dx:
             return letter
     # Partial word match fallback: check first 3 significant words
-    top_words = set(w for w in top_dx.split() if len(w) > 3)
+    top_words = {w for w in top_dx.split() if len(w) > 3}
     for letter, text in options.items():
-        text_words = set(w.lower() for w in text.split() if len(w) > 3)
+        text_words = {w.lower() for w in text.split() if len(w) > 3}
         if top_words & text_words:
             return letter
     return None

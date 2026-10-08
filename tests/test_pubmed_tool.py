@@ -2,8 +2,9 @@
 
 from unittest.mock import patch
 
+from mediagent_lite.schemas.evidence import PublicationType, PubMedAbstract
 from mediagent_lite.tools.pubmed_tool import PubMedTool
-from mediagent_lite.schemas.evidence import PubMedAbstract, PublicationType
+
 
 @patch("mediagent_lite.rag.pubmed_fetcher.PubMedFetcher.search_pmids")
 @patch("mediagent_lite.rag.pubmed_fetcher.PubMedFetcher.fetch_abstracts")

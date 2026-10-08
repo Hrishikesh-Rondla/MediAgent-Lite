@@ -6,20 +6,21 @@ coerce them to [0, 1] rather than crashing the application.
 """
 
 import pytest
+
 from mediagent_lite.schemas.report import DiagnosisReport
 
 
 class TestClampValidators:
 
     def _make_report(self, **overrides):
-        defaults = dict(
-            diagnosis="Test Dx",
-            rank=1,
-            confidence=0.5,
-            retrieval_similarity=0.5,
-            weighted_evidence_score=0.5,
-            concordance=0.5,
-        )
+        defaults = {
+            "diagnosis": "Test Dx",
+            "rank": 1,
+            "confidence": 0.5,
+            "retrieval_similarity": 0.5,
+            "weighted_evidence_score": 0.5,
+            "concordance": 0.5,
+        }
         defaults.update(overrides)
         return DiagnosisReport(**defaults)
 

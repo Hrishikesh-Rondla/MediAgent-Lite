@@ -1,7 +1,8 @@
 """Tests for PubMed fetcher and parser."""
 
+from unittest.mock import MagicMock, patch
+
 import pytest
-from unittest.mock import patch, MagicMock
 
 from mediagent_lite.rag.pubmed_fetcher import PubMedFetcher
 from mediagent_lite.schemas.evidence import PublicationType

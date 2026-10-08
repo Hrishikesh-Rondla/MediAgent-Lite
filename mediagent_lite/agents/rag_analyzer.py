@@ -6,18 +6,18 @@ chunks from Qdrant, and propose ranked diagnoses grounded in those chunks.
 
 from typing import Any, Optional
 
+from langchain_core.documents import Document
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import RunnableConfig
-from langchain_core.documents import Document
 
 from mediagent_lite.llm_factory import get_llm
+from mediagent_lite.rag.retriever import ClinicalRetriever
 from mediagent_lite.schemas.clinical import StructuredCase
 from mediagent_lite.schemas.hypothesis import (
     DiagnosisHypothesis,
     HypothesisList,
     SupportingChunk,
 )
-from mediagent_lite.rag.retriever import ClinicalRetriever
 
 
 class SymptomRAGAnalyzer:

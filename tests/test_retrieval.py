@@ -1,11 +1,13 @@
 """Tests for RAG chunking and retriever."""
 
-import pytest
 from unittest.mock import patch
 
+import pytest
+
+from mediagent_lite.config.settings import get_settings
 from mediagent_lite.rag.chunker import chunk_document
 from mediagent_lite.rag.retriever import ClinicalRetriever
-from mediagent_lite.config.settings import get_settings
+
 
 def test_chunk_document():
     text = "This is a sentence. " * 50  # Make it long enough to chunk

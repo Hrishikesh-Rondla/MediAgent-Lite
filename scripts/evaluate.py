@@ -5,8 +5,8 @@ Calculates Accuracy, Precision, Recall, F1, and mean Confidence.
 Supports running ablations (e.g., turning off the Web Scanner or RAG).
 """
 
-import os
 import json
+import os
 import time
 from pathlib import Path
 
@@ -14,8 +14,8 @@ import pandas as pd
 from datasets import load_dataset
 from tqdm import tqdm
 
-from mediagent_lite.graph.orchestrator import build_graph
 from mediagent_lite.config.settings import get_settings
+from mediagent_lite.graph.orchestrator import build_graph
 
 
 def load_medqa_data(n_questions: int = 20):

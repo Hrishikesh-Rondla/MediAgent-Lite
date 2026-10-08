@@ -17,8 +17,8 @@ from typing import Annotated, Any, Optional
 from typing_extensions import TypedDict
 
 from mediagent_lite.schemas.clinical import StructuredCase
-from mediagent_lite.schemas.hypothesis import HypothesisList
 from mediagent_lite.schemas.evidence import EvidenceBundle
+from mediagent_lite.schemas.hypothesis import HypothesisList
 from mediagent_lite.schemas.report import FusedReport
 
 

@@ -1,8 +1,8 @@
 from mediagent_lite.agents.clarifier import ClinicalTextClarifier
-from mediagent_lite.agents.rag_analyzer import SymptomRAGAnalyzer
 from mediagent_lite.agents.evidence_scanner import EvidenceScanner
 from mediagent_lite.agents.fusion import FusionAgent
 from mediagent_lite.agents.optimizer import QueryOptimizer
+from mediagent_lite.agents.rag_analyzer import SymptomRAGAnalyzer
 
 __all__ = [
     "ClinicalTextClarifier",

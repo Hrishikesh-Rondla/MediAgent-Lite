@@ -1,6 +1,7 @@
 """Pytest configuration and shared fixtures."""
 
 import os
+
 import pytest
 
 # Force test mode globally — no LLM API calls in tests
@@ -38,7 +39,7 @@ def sample_structured_case():
 @pytest.fixture
 def sample_hypothesis_list():
     """A valid HypothesisList for testing."""
-    from mediagent_lite.schemas.hypothesis import HypothesisList, DiagnosisHypothesis, SupportingChunk
+    from mediagent_lite.schemas.hypothesis import DiagnosisHypothesis, HypothesisList, SupportingChunk
     return HypothesisList(
         hypotheses=[
             DiagnosisHypothesis(

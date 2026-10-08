@@ -10,12 +10,12 @@ from typing import Optional
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import RunnableConfig
 
+from mediagent_lite.config.settings import get_settings
 from mediagent_lite.llm_factory import get_llm
 from mediagent_lite.schemas.clinical import StructuredCase
-from mediagent_lite.schemas.hypothesis import HypothesisList
 from mediagent_lite.schemas.evidence import EvidenceBundle
-from mediagent_lite.schemas.report import FusedReport, DiagnosisReport
-from mediagent_lite.config.settings import get_settings
+from mediagent_lite.schemas.hypothesis import HypothesisList
+from mediagent_lite.schemas.report import DiagnosisReport, FusedReport
 
 
 class FusionAgent:

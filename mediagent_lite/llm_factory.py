@@ -16,7 +16,6 @@ from langchain_core.messages import AIMessage
 
 from mediagent_lite.config.settings import get_settings
 
-
 # ── FakeLLM for tests ────────────────────────────────────────────────────────
 
 class FakeLLM(BaseLanguageModel):
@@ -104,9 +103,9 @@ class FakeLLM(BaseLanguageModel):
     # LangChain requires this for with_structured_output compatibility
     def with_structured_output(self, schema: Any, **kwargs: Any) -> Any:
         """Return a fake structured-output chain that parses JSON responses."""
-        from langchain_core.runnables import RunnableLambda
-
         import json
+
+        from langchain_core.runnables import RunnableLambda
 
         def parse_and_validate(input: Any) -> Any:
             response = self.invoke(input)

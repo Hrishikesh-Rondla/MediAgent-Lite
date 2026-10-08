@@ -3,17 +3,17 @@
 import time
 from concurrent.futures import ThreadPoolExecutor
 
-from langgraph.graph import StateGraph, END
 from langchain_core.runnables import RunnableConfig
+from langgraph.graph import END, StateGraph
 
-from mediagent_lite.schemas.state import AgentState
-from mediagent_lite.config.settings import get_settings
-
-# Import nodes
-from mediagent_lite.graph.nodes import clarifier_node, rag_analyzer_node, _create_trace
 from mediagent_lite.agents.evidence_scanner import EvidenceScanner
 from mediagent_lite.agents.fusion import FusionAgent
 from mediagent_lite.agents.optimizer import QueryOptimizer
+from mediagent_lite.config.settings import get_settings
+
+# Import nodes
+from mediagent_lite.graph.nodes import _create_trace, clarifier_node, rag_analyzer_node
+from mediagent_lite.schemas.state import AgentState
 
 # --- Wrap remaining agents in node functions ---
 
