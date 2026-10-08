@@ -78,6 +78,7 @@ CRITICAL RULES:
 2. For each diagnosis, you MUST cite the specific `chunk_id` of the supporting chunk(s), the exact `similarity_score` provided, and a brief `text_span` from the chunk that justifies the diagnosis.
 3. If the retrieved chunks do not support any diagnosis for the patient's symptoms, do not hallucinate one.
 4. Rank the diagnoses by likelihood (1 = most likely).
+5. YOU MUST LIMIT YOUR OUTPUT TO A MAXIMUM OF 3 HYPOTHESES. DO NOT GENERATE MORE THAN 3.
 """),
             ("human", """Patient Case:
 {case_json}

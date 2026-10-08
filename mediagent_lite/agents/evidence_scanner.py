@@ -44,7 +44,7 @@ class EvidenceScanner:
         
         self.extract_chain = ChatPromptTemplate.from_messages([
             ("system", """You are an expert evidence appraiser.
-Review the retrieved PubMed abstracts. Extract up to 3 of the most relevant pieces of evidence.
+Review the retrieved PubMed abstracts. Extract up to 3 of the most relevant pieces of evidence. NEVER EXTRACT MORE THAN 3.
 Be strict. If the text does not explicitly mention the condition or symptoms, do not use it.
 """),
             ("human", "Case:\n{case_json}\n\nHypothesis: {diagnosis}\n\nRetrieved Literature:\n{literature}")
@@ -64,8 +64,11 @@ Be strict. If the text does not explicitly mention the condition or symptoms, do
             "case_json": case_json,
             "diagnosis": hypothesis.diagnosis
         }, config=config)
-        
-        query = query_result.content.strip().strip('"').strip("'")
+        query_content = query_result.content
+        if isinstance(query_content, list):
+            query_content = query_content[0].get("text", "") if isinstance(query_content[0], dict) else str(query_content[0])
+            
+        query = query_content.strip().strip('"').strip("'")
         
         # 2. Execute Tool
         # We bypass the LLM routing and just call the tool directly to ensure stability
