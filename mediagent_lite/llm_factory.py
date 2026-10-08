@@ -81,6 +81,10 @@ class FakeLLM(BaseLanguageModel):
 
         return RunnableLambda(parse_and_validate)
 
+    def bind_tools(self, tools: Any, **kwargs: Any) -> Any:
+        """Mock tool binding by just returning self."""
+        return self
+
     def generate_prompt(self, *args: Any, **kwargs: Any) -> Any:
         raise NotImplementedError
 
