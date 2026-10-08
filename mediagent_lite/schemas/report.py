@@ -25,8 +25,7 @@ class DiagnosisReport(BaseModel):
 
     # The deterministic confidence score — NOT from LLM self-assessment
     confidence: float = Field(
-        ge=0.0,
-        le=1.0,
+        default=0.0,
         description=(
             "Deterministic score: w1*retrieval_sim + w2*evidence_score + w3*concordance. "
             "See config.yaml confidence section."
@@ -34,11 +33,10 @@ class DiagnosisReport(BaseModel):
     )
 
     # Component scores for transparency
-    retrieval_similarity: float = Field(ge=0.0, le=1.0)
-    weighted_evidence_score: float = Field(ge=0.0, le=1.0)
+    retrieval_similarity: float = Field(default=0.0)
+    weighted_evidence_score: float = Field(default=0.0)
     concordance: float = Field(
-        ge=0.0,
-        le=1.0,
+        default=0.0,
         description="1=agree, 0.5=neutral, 0=conflict between RAG and web",
     )
 
@@ -69,8 +67,7 @@ class FusedReport(BaseModel):
     )
     conflicts: list[ConflictFlag] = Field(default_factory=list)
     top_confidence: float = Field(
-        ge=0.0,
-        le=1.0,
+        default=0.0,
         description="Confidence of the top-ranked diagnosis",
     )
     iteration: int = Field(ge=0, description="Which loop iteration produced this report")
