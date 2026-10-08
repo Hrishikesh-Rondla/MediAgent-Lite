@@ -7,32 +7,29 @@
 llm_roles:
   default:
     provider: gemini
-    model: gemini-1.5-flash
+    model: gemini-3.5-flash
     temperature: 0.0  # deterministic for reproducibility
 
   clarifier:
     provider: gemini
-    model: gemini-1.5-flash
+    model: gemini-3.5-flash
     temperature: 0.0
-    # Why Gemini Flash: excellent structured-output/JSON extraction,
-    # high free-tier quota (1500 req/day), fast.
+    # Using Gemini 3.5
 
   rag_analyzer:
     provider: gemini
-    model: gemini-1.5-flash
+    model: gemini-3.5-flash
     temperature: 0.1
     # Why slight temperature: allows ranking variation while staying grounded.
 
   evidence_scanner:
-    provider: groq
-    model: llama-3.3-70b-versatile
+    provider: gemini
+    model: gemini-3.5-flash
     temperature: 0.0
-    # Why Groq: EvidenceScanner runs in parallel per hypothesis.
-    # Groq's speed (300+ tok/s) prevents this from becoming a bottleneck.
 
   fusion:
     provider: gemini
-    model: gemini-1.5-pro
+    model: gemini-3.5-flash
     temperature: 0.0
     # Why Pro: conflict detection and cross-source reasoning needs
     # the strongest model. Only one call per case, so cost is acceptable.
