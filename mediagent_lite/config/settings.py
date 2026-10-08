@@ -95,6 +95,11 @@ class Settings:
     def pubmed(self) -> dict[str, Any]:
         return self._config["pubmed"]
 
+    @property
+    def web_evidence_enabled(self) -> bool:
+        """If False, EvidenceScanner returns empty bundles without making any network calls."""
+        return self._config.get("pubmed", {}).get("web_evidence_enabled", True)
+
     # ── Evidence weights ─────────────────────────────────────────────────
     @property
     def evidence_weights(self) -> dict[str, float]:

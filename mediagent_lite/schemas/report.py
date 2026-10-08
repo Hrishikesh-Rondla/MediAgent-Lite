@@ -23,20 +23,24 @@ class DiagnosisReport(BaseModel):
     icd10_code: Optional[str] = None
     rank: int = Field(ge=1)
 
-    # The deterministic confidence score — NOT from LLM self-assessment
+    # The deterministic confidence score — overwritten by fusion.py math after LLM synthesis
     confidence: float = Field(
         default=0.0,
+        ge=0.0,
+        le=1.0,
         description=(
             "Deterministic score: w1*retrieval_sim + w2*evidence_score + w3*concordance. "
             "See config.yaml confidence section."
         ),
     )
 
-    # Component scores for transparency
-    retrieval_similarity: float = Field(default=0.0)
-    weighted_evidence_score: float = Field(default=0.0)
+    # Component scores for transparency — all overwritten by _calculate_confidence()
+    retrieval_similarity: float = Field(default=0.0, ge=0.0, le=1.0)
+    weighted_evidence_score: float = Field(default=0.0, ge=0.0, le=1.0)
     concordance: float = Field(
         default=0.0,
+        ge=0.0,
+        le=1.0,
         description="1=agree, 0.5=neutral, 0=conflict between RAG and web",
     )
 
@@ -52,11 +56,19 @@ class DiagnosisReport(BaseModel):
     has_conflict: bool = False
     conflict_detail: Optional[str] = None
 
-    @field_validator("confidence", mode="before")
+    @field_validator("confidence", "retrieval_similarity", "weighted_evidence_score", "concordance", mode="before")
     @classmethod
-    def confidence_is_bounded(cls, v: float) -> float:
-        """Clamp to [0, 1] in case of floating-point drift."""
-        return max(0.0, min(1.0, v))
+    def clamp_to_unit_interval(cls, v: object) -> float:
+        """Clamp any LLM-hallucinated value to [0, 1] before Pydantic validates the ge/le bounds.
+
+        This prevents crashes when a local 8B model returns integers like 3 or negative
+        floats for fields that must be probabilities. The deterministic fusion math
+        overwrites these values anyway — clamping here is purely a stability guard.
+        """
+        try:
+            return max(0.0, min(1.0, float(v)))
+        except (TypeError, ValueError):
+            return 0.0
 
 
 class FusedReport(BaseModel):

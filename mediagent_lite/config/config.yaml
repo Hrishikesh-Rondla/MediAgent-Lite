@@ -23,8 +23,8 @@ llm_roles:
     # Why slight temperature: allows ranking variation while staying grounded.
 
   evidence_scanner:
-    provider: gemini
-    model: gemini-3.5-flash
+    provider: groq
+    model: llama-3.3-70b-versatile
     temperature: 0.0
 
   fusion:
@@ -38,8 +38,8 @@ llm_roles:
     provider: groq
     model: llama-3.1-8b-instant
     temperature: 0.3
-    # Why 8b instant: query rewriting is lightweight. Fast + free quota.
-    # Temperature 0.3: we WANT paraphrase variation to avoid repeating queries.
+    # Query rewriting is lightweight. Groq's speed prevents this from becoming a bottleneck.
+    # Temperature 0.3: variation is intentional to avoid repeating the same query.
 
   medqa_adapter:
     provider: gemini
@@ -99,6 +99,7 @@ optimizer:
 
 # ── PubMed / Web Evidence ───────────────────────────────────────────────────
 pubmed:
+  web_evidence_enabled: true    # Set false to disable all outbound PubMed calls (offline/cache-only mode)
   max_results_per_query: 5
   cache_dir: ./data/pubmed_cache
   retmax: 5

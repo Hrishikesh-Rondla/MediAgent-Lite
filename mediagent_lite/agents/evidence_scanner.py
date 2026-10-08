@@ -91,9 +91,11 @@ CRITICAL: You MUST respond with valid JSON matching this exact structure:
         # We DO NOT use quotes. PubMed keyword matching handles raw terms much better.
         query = f"{clean_dx} {sym_str}"
         
-        # 2. Execute Tool
-        # We bypass the LLM routing and just call the tool directly to ensure stability
-        # and prevent infinite loops in the Lite version.
+        # 2. Execute Tool (gated by config flag)
+        # Set pubmed.web_evidence_enabled: false in config.yaml to run fully offline.
+        if not self.settings.web_evidence_enabled:
+            return EvidenceBundle(records=[])
+
         literature = self.tool._run(query=query, retmax=3)
         
         if "No results found" in literature or "Error" in literature:

@@ -1,21 +1,24 @@
 # MediAgent-Lite
 
-A scalable, offline-capable, multi-agent clinical decision support system (CDSS). Based on the architecture from the IEEE Access 2025 paper: *"An Adaptive Multi-Agent LLM-Based CDSS Integrating Biomedical RAG and Web Intelligence"*.
+[![CI](https://github.com/Hrishikesh-Rondla/MediAgent-Lite/actions/workflows/ci.yml/badge.svg)](https://github.com/Hrishikesh-Rondla/MediAgent-Lite/actions/workflows/ci.yml)
 
-**Disclaimer:** For educational, research, and portfolio use only. Not a medical device.
+A multi-agent clinical decision support system (CDSS) implementing the architecture from the IEEE Access 2025 paper: *"An Adaptive Multi-Agent LLM-Based CDSS Integrating Biomedical RAG and Web Intelligence"*.
+
+**Disclaimer:** For educational, research, and portfolio use only. Use synthetic data only; no PHI. Not a medical device.
 
 ## 📊 Technical Achievements
 
-- **Massive Concurrency:** Implemented a `ThreadPoolExecutor` within the LangGraph architecture to evaluate diagnostic hypotheses in parallel, reducing PubMed API retrieval latency by **66%**.
-- **Edge Deployment:** Successfully optimized a complex 5-agent pipeline to run 100% locally on an 8B parameter model (Llama 3.1 8B via Ollama) using an RTX 4060 (8GB VRAM), achieving **$0 in API costs** while maintaining data privacy.
-- **Hallucination Eradication:** Designed a strict deterministic Python override mechanism that catches and neutralizes LLM JSON hallucinations (e.g., overriding fake LLM-generated confidence scores with mathematically verifiable formulas).
-- **Advanced RAG:** Ingested medical literature chunks into a **Qdrant** vector database, embedded via **BioBERT** (768-dimensional space) for highly specialized semantic search.
+- **Concurrency:** Implemented a `ThreadPoolExecutor` within the LangGraph architecture to evaluate diagnostic hypotheses in parallel, reducing PubMed API retrieval latency by **~40%** (benchmark in `results/`).
+- **Local Edge Inference:** Optimized a 5-agent pipeline to run entirely locally on an 8B parameter model (Llama 3.1 8B via Ollama) using an RTX 4060 (8GB VRAM), requiring $0 in LLM API costs.
+- **Hallucination Guardrails:** Designed a deterministic Python override mechanism that catches LLM JSON hallucinations (e.g., overriding LLM-generated confidence scores with the paper's mathematical formula).
+- **Biomedical RAG:** Ingested medical literature chunks into a **Qdrant** vector database, embedded via **BioBERT** (768-dimensional space) for semantic search.
 
 ## 🚀 Features
 - **Multi-Agent Orchestration**: Powered by **LangGraph**, utilizing specialized LLM agents (Clarifier, RAG Analyzer, Evidence Scanner, Fusion Node, Optimizer).
-- **Offline / Local Execution**: Fully supports local inference via **Ollama**, ensuring complete HIPAA-compliant privacy with 0-byte cloud transmission.
-- **Dynamic Provider Routing**: Seamlessly swap between Cloud APIs (Groq, Gemini) and Local APIs (Ollama).
-- **One-Shot JSON Prompting**: Utilizes advanced prompt engineering and 1-shot schema injection to prevent edge models from entering repetitive loops.
+- **Privacy & Data Flow**: LLM inference runs locally via Ollama. The only outbound network traffic occurs when the Evidence Scanner queries the public PubMed (NCBI E-utilities) API using non-PII symptom and diagnosis terms. 
+- **Offline Mode**: A `web_evidence_enabled` config flag allows disabling PubMed entirely, making the system 100% offline-capable (relying solely on the local Qdrant database).
+- **Provider Routing**: Swap between Cloud APIs (Groq, Gemini) and Local APIs (Ollama) via config.
+- **One-Shot JSON Prompting**: Utilizes prompt engineering and 1-shot schema injection to prevent edge models from entering repetitive loops.
 
 ## 🛠️ Architecture
 
@@ -37,7 +40,7 @@ pip install -r requirements.txt
 
 ### 2. Configure API Keys (Optional)
 Copy `.env.example` to `.env`. 
-If you intend to run this 100% locally using Ollama, **you do not need any API keys**.
+If you intend to run this locally using Ollama, **you do not need any API keys**.
 ```env
 DEFAULT_LLM_PROVIDER=ollama
 ```
@@ -55,11 +58,11 @@ streamlit run app.py
 ```
 
 ## 🐛 Debugging & Edge-Case Handling
-This repository serves as a portfolio piece demonstrating advanced AI debugging:
-- **Pydantic Validation Resiliency**: Removed strict schema boundaries to prevent the application from crashing when local 8B models hallucinate integers. The deterministic backend gracefully overwrites the hallucinations.
-- **Programmatic Query Construction**: Bypassed weak LLM query-generation capabilities by hardcoding Boolean searches (`Diagnosis + Symptom`), guaranteeing high-quality PubMed retrieval for local edge models.
-- **Streamlit State Caching**: Solved double-execution bottlenecks by optimizing LangGraph `stream_mode="values"` state caching.
-- **Offline Mocking**: Built a highly robust context-aware `FakeLLM` mock to bypass rate limits during rapid UI iteration.
+This repository serves as a portfolio piece demonstrating AI debugging:
+- **Pydantic Validation Resiliency**: Implemented a clamp-before-validate pattern to prevent the application from crashing when local 8B models hallucinate integers for probability fields. 
+- **Programmatic Query Construction**: Bypassed weak LLM query-generation capabilities by hardcoding Boolean searches (`Diagnosis + Symptom`), guaranteeing correct PubMed retrieval for local edge models.
+- **Streamlit State Caching**: Solved double-execution bottlenecks by using LangGraph `stream_mode="values"` state caching.
+- **Testing Mocks**: Built a context-aware `FakeLLM` mock to enable offline unit testing.
 
 ## 🔮 Future Scope
 - **Dynamic Fallback Routing (Agentic RAG):** Implementing conditional routing to bypass the local vector DB and trigger a "Deep Research Agent" if local RAG confidence falls below 0.35.
