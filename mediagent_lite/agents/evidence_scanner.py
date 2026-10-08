@@ -46,6 +46,21 @@ class EvidenceScanner:
             ("system", """You are an expert evidence appraiser.
 Review the retrieved PubMed abstracts. Extract up to 3 of the most relevant pieces of evidence. NEVER EXTRACT MORE THAN 3.
 Be strict. If the text does not explicitly mention the condition or symptoms, do not use it.
+
+CRITICAL: You MUST respond with valid JSON matching this exact structure:
+{{
+  "records": [
+    {{
+      "hypothesis": "Diagnosis Name",
+      "pmid": "123456",
+      "title": "Article Title",
+      "classified_type": "cohort",
+      "evidence_weight": 0.6,
+      "relevance_summary": "Short explanation",
+      "year": 2024
+    }}
+  ]
+}}
 """),
             ("human", "Case:\n{case_json}\n\nHypothesis: {diagnosis}\n\nRetrieved Literature:\n{literature}")
         ]) | self.llm.with_structured_output(EvidenceBundle)
@@ -60,15 +75,12 @@ Be strict. If the text does not explicitly mention the condition or symptoms, do
         
         # 1. Generate Query
         case_json = case.model_dump_json(exclude_none=True)
-        query_result = self.query_chain.invoke({
-            "case_json": case_json,
-            "diagnosis": hypothesis.diagnosis
-        }, config=config)
-        query_content = query_result.content
-        if isinstance(query_content, list):
-            query_content = query_content[0].get("text", "") if isinstance(query_content[0], dict) else str(query_content[0])
-            
-        query = query_content.strip().strip('"').strip("'")
+        
+        # OPTIMIZATION FOR LOCAL MODELS: 
+        # Small models (8B) often hallucinate conversation rather than raw search strings.
+        # We programmatically construct the boolean query to guarantee a valid PubMed search.
+        symptom_term = case.chief_complaint if case.chief_complaint else "symptoms"
+        query = f'"{hypothesis.diagnosis}" AND "{symptom_term}"'
         
         # 2. Execute Tool
         # We bypass the LLM routing and just call the tool directly to ensure stability
