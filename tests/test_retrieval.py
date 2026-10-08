@@ -1,6 +1,7 @@
 """Tests for RAG chunking and retriever."""
 
 import pytest
+from unittest.mock import patch
 from langchain_core.documents import Document
 
 from mediagent_lite.rag.chunker import chunk_document
@@ -18,7 +19,8 @@ def test_chunk_document():
     assert chunks[0].metadata["chunk_index"] == 0
     assert chunks[1].metadata["chunk_index"] == 1
     
-def test_retriever_term_boosting():
+@patch("mediagent_lite.rag.retriever.QdrantClient")
+def test_retriever_term_boosting(mock_qdrant):
     retriever = ClinicalRetriever()
     
     # "myocardial" and "infarction" are > 7 chars, they should be boosted
