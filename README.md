@@ -11,6 +11,7 @@ A multi-agent clinical decision support system (CDSS) implementing the architect
 - **Concurrency:** Implemented a `ThreadPoolExecutor` within the LangGraph architecture to evaluate diagnostic hypotheses in parallel, reducing PubMed API retrieval latency by **~40%** (benchmark in `results/`).
 - **Local Edge Inference:** Optimized a 5-agent pipeline to run entirely locally on an 8B parameter model (Llama 3.1 8B via Ollama) using an RTX 4060 (8GB VRAM), requiring $0 in LLM API costs.
 - **Hallucination Guardrails:** Designed a deterministic Python override mechanism that catches LLM JSON hallucinations (e.g., overriding LLM-generated confidence scores with the paper's mathematical formula).
+- **Automated Evaluation Harness:** Built a custom evaluation script integrating the MedQA-USMLE dataset to rigorously benchmark system accuracy, computing 95% Wilson confidence intervals across various ablation configurations.
 - **Biomedical RAG:** Ingested medical literature chunks into a **Qdrant** vector database, embedded via **BioBERT** (768-dimensional space) for semantic search.
 
 ## 🚀 Features
