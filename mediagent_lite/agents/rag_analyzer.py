@@ -79,6 +79,36 @@ CRITICAL RULES:
 3. If the retrieved chunks do not support any diagnosis for the patient's symptoms, do not hallucinate one.
 4. Rank the diagnoses by likelihood (1 = most likely).
 5. YOU MUST LIMIT YOUR OUTPUT TO A MAXIMUM OF 3 HYPOTHESES. DO NOT GENERATE MORE THAN 3.
+
+CRITICAL: You MUST respond with valid JSON matching this exact structure:
+{{
+  "hypotheses": [
+    {{
+      "diagnosis": "Disease A",
+      "rank": 1,
+      "reasoning": "Symptoms match...",
+      "supporting_chunks": [
+        {{
+          "chunk_id": "chunk-123",
+          "text_span": "text from chunk...",
+          "similarity_score": 0.85
+        }}
+      ]
+    }},
+    {{
+      "diagnosis": "Disease B",
+      "rank": 2,
+      "reasoning": "Also possible...",
+      "supporting_chunks": [
+        {{
+          "chunk_id": "chunk-456",
+          "text_span": "different chunk text...",
+          "similarity_score": 0.62
+        }}
+      ]
+    }}
+  ]
+}}
 """),
             ("human", """Patient Case:
 {case_json}
