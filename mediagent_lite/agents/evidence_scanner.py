@@ -78,9 +78,18 @@ CRITICAL: You MUST respond with valid JSON matching this exact structure:
         
         # OPTIMIZATION FOR LOCAL MODELS: 
         # Small models (8B) often hallucinate conversation rather than raw search strings.
-        # We programmatically construct the boolean query to guarantee a valid PubMed search.
-        symptom_term = case.chief_complaint if case.chief_complaint else "symptoms"
-        query = f'"{hypothesis.diagnosis}" AND "{symptom_term}"'
+        # We programmatically construct the keyword query to guarantee a valid PubMed search.
+        import re
+        
+        # Clean diagnosis string (e.g. "Myocardial Infarction/Unstable Angina" -> "Myocardial Infarction Unstable Angina")
+        clean_dx = re.sub(r'[^a-zA-Z0-9\s]', ' ', hypothesis.diagnosis).strip()
+        
+        # Use short symptom names instead of a massive chief complaint sentence
+        sym_list = [sym.name for sym in case.symptoms][:2]
+        sym_str = " ".join(sym_list) if sym_list else "diagnosis"
+        
+        # We DO NOT use quotes. PubMed keyword matching handles raw terms much better.
+        query = f"{clean_dx} {sym_str}"
         
         # 2. Execute Tool
         # We bypass the LLM routing and just call the tool directly to ensure stability
