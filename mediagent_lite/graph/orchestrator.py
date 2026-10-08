@@ -35,7 +35,7 @@ def evidence_scanner_node(state: AgentState, config: RunnableConfig) -> dict:
             ]
             bundles = [f.result() for f in futures]
             
-    trace = _create_trace("EvidenceScanner (Parallel)", start, f"{len(bundles)} hypotheses", f"{sum(len(b.evidence) for b in bundles)} evidence records", state.get("iteration", 0))
+    trace = _create_trace("EvidenceScanner (Parallel)", start, f"{len(bundles)} hypotheses", f"{sum(len(b.records) for b in bundles)} evidence records", state.get("iteration", 0))
     
     return {
         "evidence_bundles": bundles,

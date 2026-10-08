@@ -52,8 +52,8 @@ class AgentState(TypedDict):
     # Intermediate state (each set by the corresponding node)
     structured_case: Optional[StructuredCase]
     hypotheses: Optional[HypothesisList]
-    web_evidence: Optional[EvidenceBundle]
-    fused_report: Optional[FusedReport]
+    evidence_bundles: list[EvidenceBundle]
+    final_report: Optional[FusedReport]
 
     # Feedback loop control
     confidence: float  # top confidence from current iteration
