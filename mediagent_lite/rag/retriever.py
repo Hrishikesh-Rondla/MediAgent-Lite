@@ -78,12 +78,13 @@ class ClinicalRetriever:
         query_vector = self.embedder.embed_query(query)
         
         # Qdrant returns score as cosine similarity
-        results = self.client.search(
+        response = self.client.query_points(
             collection_name=self.collection_name,
-            query_vector=query_vector,
+            query=query_vector,
             limit=limit,
             score_threshold=threshold,
         )
+        results = response.points
         
         docs_with_scores = []
         for res in results:

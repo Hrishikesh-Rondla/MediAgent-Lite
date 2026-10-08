@@ -64,7 +64,9 @@ def test_retrieval_flow(mock_qdrant, temp_retriever):
     
     from unittest.mock import MagicMock
     temp_retriever.client = MagicMock()
-    temp_retriever.client.search.return_value = []
+    mock_response = MagicMock()
+    mock_response.points = []
+    temp_retriever.client.query_points.return_value = mock_response
     
     # Retrieve exact match
     results = temp_retriever.retrieve("heart attack medication")
