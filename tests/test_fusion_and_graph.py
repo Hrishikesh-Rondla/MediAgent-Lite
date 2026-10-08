@@ -1,10 +1,9 @@
 """Tests for Fusion Agent and overall Graph logic."""
 
-import pytest
 from unittest.mock import patch
 
 from mediagent_lite.agents.fusion import FusionAgent
-from mediagent_lite.schemas.report import FusedReport, DiagnosisReport, ConflictFlag
+from mediagent_lite.schemas.report import FusedReport, DiagnosisReport
 from mediagent_lite.schemas.hypothesis import HypothesisList, DiagnosisHypothesis, SupportingChunk
 from mediagent_lite.schemas.evidence import EvidenceBundle, EvidenceRecord, PublicationType
 from mediagent_lite.graph.orchestrator import evaluate_confidence

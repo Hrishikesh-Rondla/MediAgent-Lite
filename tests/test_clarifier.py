@@ -1,6 +1,5 @@
 """Tests for ClinicalTextClarifier."""
 
-import pytest
 from unittest.mock import patch
 
 from mediagent_lite.agents.clarifier import ClinicalTextClarifier

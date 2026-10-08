@@ -1,6 +1,5 @@
 """Tests for PubMed fetcher and parser."""
 
-import os
 import pytest
 from unittest.mock import patch, MagicMock
 

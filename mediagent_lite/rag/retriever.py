@@ -4,7 +4,7 @@ from typing import Any
 import uuid
 
 from qdrant_client import QdrantClient
-from qdrant_client.models import Distance, VectorParams, PointStruct, ScoredPoint
+from qdrant_client.models import Distance, VectorParams, PointStruct
 from langchain_core.documents import Document
 
 from mediagent_lite.config.settings import get_settings

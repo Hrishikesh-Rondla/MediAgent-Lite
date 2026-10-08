@@ -6,7 +6,6 @@ import time
 import hashlib
 import xml.etree.ElementTree as ET
 from pathlib import Path
-from typing import Optional
 
 import requests
 from tenacity import retry, wait_exponential, stop_after_attempt, retry_if_exception_type

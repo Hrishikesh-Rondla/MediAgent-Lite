@@ -1,7 +1,6 @@
 """Tests for SymptomRAGAnalyzer."""
 
-import pytest
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 
 from langchain_core.documents import Document
 

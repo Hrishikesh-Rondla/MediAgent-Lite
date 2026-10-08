@@ -13,7 +13,6 @@ from pathlib import Path
 sys.path.append(str(Path(__file__).parent.parent))
 
 from datasets import load_dataset
-from langchain_core.documents import Document
 
 from mediagent_lite.config.settings import get_settings
 from mediagent_lite.rag.pubmed_fetcher import PubMedFetcher

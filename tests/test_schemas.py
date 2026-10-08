@@ -17,10 +17,8 @@ from mediagent_lite.schemas.evidence import (
     EvidenceBundle,
     EvidenceRecord,
     PublicationType,
-    PubMedAbstract,
 )
 from mediagent_lite.schemas.report import (
-    ConflictFlag,
     DiagnosisReport,
     FusedReport,
 )

@@ -6,7 +6,7 @@ coerce them to [0, 1] rather than crashing the application.
 """
 
 import pytest
-from mediagent_lite.schemas.report import DiagnosisReport, FusedReport
+from mediagent_lite.schemas.report import DiagnosisReport
 
 
 class TestClampValidators:

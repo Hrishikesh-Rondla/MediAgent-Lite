@@ -13,7 +13,7 @@ from langchain_core.runnables import RunnableConfig
 from mediagent_lite.llm_factory import get_llm
 from mediagent_lite.schemas.clinical import StructuredCase
 from mediagent_lite.schemas.hypothesis import DiagnosisHypothesis
-from mediagent_lite.schemas.evidence import EvidenceBundle, EvidenceRecord, PublicationType
+from mediagent_lite.schemas.evidence import EvidenceBundle
 from mediagent_lite.tools.pubmed_tool import PubMedTool
 from mediagent_lite.config.settings import get_settings
 

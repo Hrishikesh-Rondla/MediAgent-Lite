@@ -18,7 +18,6 @@ Notes:
 
 import argparse
 import json
-import os
 import sys
 import tempfile
 import time
@@ -119,7 +118,7 @@ def main():
     print(f"  Sequential (mean ± std): {mean_seq:.2f}s ± {std_seq:.2f}s")
     print(f"  Parallel   (mean ± std): {mean_par:.2f}s ± {std_par:.2f}s")
     print(f"  Latency reduction:       {speedup_pct:+.1f}%")
-    print(f"  (positive = parallel is faster; negative = parallel is slower)")
+    print("  (positive = parallel is faster; negative = parallel is slower)")
     print("=" * 60)
 
     results = {

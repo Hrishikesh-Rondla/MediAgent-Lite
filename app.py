@@ -6,8 +6,8 @@ the LangGraph orchestrator and visualize the internal trace.
 
 import streamlit as st
 import traceback
+import os
 
-from langchain_core.runnables import RunnableConfig
 
 from mediagent_lite.graph.orchestrator import build_graph
 from mediagent_lite.config.settings import get_settings
@@ -26,8 +26,6 @@ st.session_state.settings = get_settings()
 
 if "history" not in st.session_state:
     st.session_state.history = []
-
-import os
 
 # --- Sidebar ---
 with st.sidebar:
@@ -143,7 +141,7 @@ if prompt:
                     # Find the latest trace entry to show what happened
                     if "trace" in output and output["trace"]:
                         latest_trace = output["trace"][-1]
-                        st.write(f"✅ Step completed.")
+                        st.write("✅ Step completed.")
                         st.caption(f"↳ {latest_trace['outputs_summary']} ({latest_trace['latency_ms']}ms)")
                             
                 status.update(label="Analysis complete!", state="complete", expanded=False)
@@ -167,5 +165,5 @@ if prompt:
                     "trace": trace
                 })
                 st.rerun()
-            except Exception as e:
+            except Exception:
                 st.error("Failed to generate final report.")

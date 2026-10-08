@@ -53,7 +53,7 @@ def generate_plots():
     
     # Plot 2: Confidence
     plt.figure(figsize=(10, 6))
-    ax2 = sns.barplot(data=df, x="ablation", y="mean_confidence", palette="Greens_d")
+    sns.barplot(data=df, x="ablation", y="mean_confidence", palette="Greens_d")
     plt.title("System Confidence Score across Configurations")
     plt.ylabel("Mean Confidence (0-1)")
     plt.xlabel("Configuration")

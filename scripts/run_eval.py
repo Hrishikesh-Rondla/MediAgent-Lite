@@ -136,8 +136,6 @@ def make_initial_state(narrative: str, config_name: str) -> dict:
 
 def run_config(config_name: str, data: list, max_iter_override: int | None, settings) -> dict:
     """Run one eval configuration over the test data."""
-    from mediagent_lite.config import settings as settings_module
-    from unittest.mock import patch
 
     results_raw_dir = Path("results/raw")
     results_raw_dir.mkdir(parents=True, exist_ok=True)

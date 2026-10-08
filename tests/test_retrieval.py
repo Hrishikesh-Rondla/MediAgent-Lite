@@ -2,7 +2,6 @@
 
 import pytest
 from unittest.mock import patch
-from langchain_core.documents import Document
 
 from mediagent_lite.rag.chunker import chunk_document
 from mediagent_lite.rag.retriever import ClinicalRetriever
@@ -55,12 +54,6 @@ def temp_retriever(tmp_path):
 @patch("mediagent_lite.rag.retriever.QdrantClient")
 def test_retrieval_flow(mock_qdrant, temp_retriever):
     """End-to-end ingest and retrieve test."""
-    
-    docs = [
-        Document(page_content="Aspirin is used for myocardial infarction.", metadata={"source_id": "doc1"}),
-        Document(page_content="Tylenol treats fever.", metadata={"source_id": "doc2"}),
-        Document(page_content="Ibuprofen is for inflammation.", metadata={"source_id": "doc3"}),
-    ]
     
     from unittest.mock import MagicMock
     temp_retriever.client = MagicMock()

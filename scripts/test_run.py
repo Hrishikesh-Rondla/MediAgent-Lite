@@ -1,5 +1,4 @@
 from mediagent_lite.graph.orchestrator import build_graph
-import json
 
 def main():
     graph = build_graph()

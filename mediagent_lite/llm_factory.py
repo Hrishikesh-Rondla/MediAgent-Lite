@@ -11,7 +11,7 @@ from __future__ import annotations
 import os
 from typing import Any
 
-from langchain_core.language_models import BaseLLM, BaseLanguageModel
+from langchain_core.language_models import BaseLanguageModel
 from langchain_core.messages import AIMessage
 
 from mediagent_lite.config.settings import get_settings
@@ -104,7 +104,6 @@ class FakeLLM(BaseLanguageModel):
     # LangChain requires this for with_structured_output compatibility
     def with_structured_output(self, schema: Any, **kwargs: Any) -> Any:
         """Return a fake structured-output chain that parses JSON responses."""
-        from langchain_core.output_parsers import JsonOutputParser
         from langchain_core.runnables import RunnableLambda
 
         import json
@@ -116,7 +115,7 @@ class FakeLLM(BaseLanguageModel):
                 if hasattr(schema, "model_validate"):
                     return schema.model_validate(data)
                 return data
-            except Exception as e:
+            except Exception:
                 import traceback
                 traceback.print_exc()
                 # Return a minimal valid instance for testing
