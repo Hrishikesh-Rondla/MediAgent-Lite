@@ -85,7 +85,15 @@ Generate the final synthesis report.
         if report.has_conflict:
             confidence *= 0.5
             
-        return max(0.0, min(1.0, confidence))
+        final_conf = max(0.0, min(1.0, confidence))
+        
+        # FIX: We must overwrite the LLM's hallucinated scores with our deterministic math
+        report.retrieval_similarity = s_rag
+        report.weighted_evidence_score = s_ev
+        report.concordance = s_concordance
+        report.confidence = final_conf
+        
+        return final_conf
 
     def process(
         self, 
