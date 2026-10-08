@@ -4,8 +4,7 @@ A scalable, offline-capable, multi-agent clinical decision support system (CDSS)
 
 **Disclaimer:** For educational, research, and portfolio use only. Not a medical device.
 
-## 📊 Resume Metrics & Highlights
-*Feel free to use these metrics on your resume to quantify the impact of this project.*
+## 📊 Technical Achievements
 
 - **Massive Concurrency:** Implemented a `ThreadPoolExecutor` within the LangGraph architecture to evaluate diagnostic hypotheses in parallel, reducing PubMed API retrieval latency by **66%**.
 - **Edge Deployment:** Successfully optimized a complex 5-agent pipeline to run 100% locally on an 8B parameter model (Llama 3.1 8B via Ollama) using an RTX 4060 (8GB VRAM), achieving **$0 in API costs** while maintaining data privacy.
