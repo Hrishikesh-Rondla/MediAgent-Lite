@@ -20,13 +20,14 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Initialize session state
-if "graph" not in st.session_state:
-    st.session_state.graph = build_graph()
-    st.session_state.settings = get_settings()
+# Initialize session state (but build the graph fresh every time to avoid cached configuration errors)
+st.session_state.graph = build_graph()
+st.session_state.settings = get_settings()
 
 if "history" not in st.session_state:
     st.session_state.history = []
+
+import os
 
 # --- Sidebar ---
 with st.sidebar:
@@ -45,7 +46,24 @@ with st.sidebar:
     st.markdown("---")
     st.markdown("### Config overrides (Runtime)")
     # Allow overriding some config dynamically
-    provider = st.selectbox("LLM Provider", ["gemini", "groq", "ollama", "fake"], index=0)
+    current_provider = os.getenv("DEFAULT_LLM_PROVIDER", "gemini")
+    provider_options = ["gemini", "groq", "ollama", "fake"]
+    idx = provider_options.index(current_provider) if current_provider in provider_options else 0
+    
+    provider = st.selectbox("LLM Provider", provider_options, index=idx)
+    
+    # If the user changed the provider in the UI, update the env var and rebuild graph
+    if provider != current_provider:
+        os.environ["DEFAULT_LLM_PROVIDER"] = provider
+        st.session_state.graph = build_graph()
+        st.rerun()
+        
+    st.markdown("---")
+    st.markdown("### Demo Cases")
+    if st.button("Cardiology Case"):
+        st.session_state.demo_prompt = "65yo M c/o sudden crushing chest pain radiating to jaw, diaphoresis. BP 160/90, HR 110."
+    if st.button("Neurology Case"):
+        st.session_state.demo_prompt = "72yo F presents with sudden right-sided weakness, facial droop, and slurred speech starting 45 mins ago."
     
     st.markdown("---")
     if st.button("Clear History"):
@@ -84,12 +102,17 @@ for msg in st.session_state.history:
             if msg.get("trace"):
                 with st.expander("🔍 View Internal Graph Trace", expanded=False):
                     for t in msg["trace"]:
-                        st.markdown(f"**[{t.iteration}] {t.node}** ({t.latency_ms}ms)")
-                        st.text(f"In:  {t.inputs_summary}\nOut: {t.outputs_summary}")
+                        st.markdown(f"**[{t['iteration']}] {t['node']}** ({t['latency_ms']}ms)")
+                        st.text(f"In:  {t['inputs_summary']}\nOut: {t['outputs_summary']}")
 
 
 # Input area
-if prompt := st.chat_input("Enter clinical case (e.g., '45yo M c/o sudden severe chest pain...'):"):
+prompt = st.chat_input("Enter clinical case (e.g., '45yo M c/o sudden severe chest pain...'):")
+if "demo_prompt" in st.session_state:
+    prompt = st.session_state.demo_prompt
+    del st.session_state.demo_prompt
+
+if prompt:
     
     # Add user message
     st.session_state.history.append({"role": "user", "content": prompt})
@@ -113,32 +136,17 @@ if prompt := st.chat_input("Enter clinical case (e.g., '45yo M c/o sudden severe
                     "config_flags": {}
                 }
                 
-                # We need to pass the provider override via env vars or config, 
-                # but for simplicity in Lite, we'll just let it use the .env defaults.
-                
-                # Run the graph
-                # stream() yields state updates as each node finishes
                 final_state = None
-                for output in st.session_state.graph.stream(initial_state):
-                    # output is a dict like {'NodeName': {state_updates}}
-                    for node_name, state_update in output.items():
-                        st.write(f"✅ **{node_name}** completed.")
-                        
-                        # Grab the latest trace entry to show what happened
-                        if "trace" in state_update and state_update["trace"]:
-                            latest_trace = state_update["trace"][-1]
-                            st.caption(f"↳ {latest_trace.outputs_summary} ({latest_trace.latency_ms}ms)")
+                for output in st.session_state.graph.stream(initial_state, stream_mode="values"):
+                    # When stream_mode="values", output is the full state dictionary at that step
+                    final_state = output
+                    # Find the latest trace entry to show what happened
+                    if "trace" in output and output["trace"]:
+                        latest_trace = output["trace"][-1]
+                        st.write(f"✅ Step completed.")
+                        st.caption(f"↳ {latest_trace['outputs_summary']} ({latest_trace['latency_ms']}ms)")
                             
-                    final_state = state_update
-                
                 status.update(label="Analysis complete!", state="complete", expanded=False)
-                
-                # Save to history
-                # Note: stream() merges updates into the overall state under the hood,
-                # but the final emitted object might just be the last node's update.
-                # To get the FULL final state, we should use invoke(), or accumulate.
-                # Since we used stream(), let's run invoke to ensure we have the whole object
-                # (in a real app you'd accumulate the state dicts).
                 
             except Exception as e:
                 status.update(label="Error occurred", state="error", expanded=True)
@@ -146,14 +154,9 @@ if prompt := st.chat_input("Enter clinical case (e.g., '45yo M c/o sudden severe
                 st.code(traceback.format_exc())
                 final_state = None
                 
-        # If stream worked, we need the full state. It's better to just use invoke for UI
-        # Let's re-run with invoke to get the full state object easily (dirty hack for Lite,
-        # normally you accumulate stream outputs).
         if final_state is not None:
-            # Actually, stream() returns the full state at the end if you use .invoke()
-            # Let's just use invoke() for the final output
             try:
-                full_state = st.session_state.graph.invoke(initial_state)
+                full_state = final_state
                 
                 report = full_state.get("final_report")
                 trace = full_state.get("trace", [])
