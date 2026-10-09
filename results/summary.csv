@@ -1,0 +1,2 @@
+config,n,accuracy,latency,iterations,loop_fraction
+E,80,0.0125,2.94,0.0,0.0

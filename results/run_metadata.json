@@ -1,0 +1,12 @@
+{
+  "date": "2026-10-09",
+  "commit": "088ebda",
+  "model": "FakeLLM",
+  "quantization": "none",
+  "embedding_model": "BioBERT",
+  "n": 80,
+  "seed": 42,
+  "tau": 0.65,
+  "hardware": "RTX 4060 8GB (simulated fake run)",
+  "library_versions": "langgraph>=0.2.0"
+}

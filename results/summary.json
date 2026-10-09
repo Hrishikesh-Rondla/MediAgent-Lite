@@ -1,0 +1,15 @@
+[
+  {
+    "config": "E",
+    "n": 80,
+    "correct": 1,
+    "accuracy": 0.0125,
+    "wilson_95_ci": [
+      0.0022,
+      0.0675
+    ],
+    "mean_latency_s": 2.94,
+    "mean_iterations": 0.0,
+    "loop_triggered_fraction": 0.0
+  }
+]

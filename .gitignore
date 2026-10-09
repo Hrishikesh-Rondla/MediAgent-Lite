@@ -20,7 +20,5 @@ data/pubmed_cache/
 data/hf_cache/
 .pytest_cache/
 .ruff_cache/
-results/
-!results/.gitkeep
 *.pkl
 *.faiss

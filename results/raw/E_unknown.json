@@ -1,0 +1,11 @@
+{
+  "id": "unknown",
+  "correct_answer": "B",
+  "correct_text": "Secondary active transporters fail to completely reabsorb glucose in the renal tubules",
+  "predicted_letter": null,
+  "predicted_text": "Acute Myocardial Infarction",
+  "is_correct": false,
+  "confidence": 0.7875,
+  "latency_s": 2.84,
+  "iterations": 0
+}

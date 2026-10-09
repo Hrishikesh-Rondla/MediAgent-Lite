@@ -1,0 +1,42 @@
+{
+  "config": {
+    "n_trials": 10,
+    "queries_per_trial": 3,
+    "max_workers": 3,
+    "cache_disabled": true
+  },
+  "sequential": {
+    "mean_s": 7.506,
+    "std_s": 1.248,
+    "raw_s": [
+      5.913,
+      10.134,
+      6.679,
+      6.329,
+      7.788,
+      6.875,
+      7.073,
+      8.798,
+      7.578,
+      7.898
+    ]
+  },
+  "parallel": {
+    "mean_s": 5.249,
+    "std_s": 0.912,
+    "raw_s": [
+      5.01,
+      5.288,
+      4.599,
+      5.438,
+      5.197,
+      4.737,
+      7.626,
+      5.498,
+      4.652,
+      4.45
+    ]
+  },
+  "latency_reduction_pct": 30.1,
+  "note": "Speedup is bounded by the number of hypotheses (max_workers=3). On a single GPU with Ollama, LLM calls may serialize on the GPU even when HTTP calls are parallel."
+}
