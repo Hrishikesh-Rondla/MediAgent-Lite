@@ -101,27 +101,39 @@ class PubMedFetcher:
         if not pmids:
             return []
             
-        pmid_str = ",".join(pmids)
-        cache_path = self._get_cache_path("fetch", pmid_str)
+        # To avoid URI Too Long HTTP errors (max ~2000 chars), we batch the requests
+        batch_size = 100
+        all_abstracts = []
         
-        if cache_path.exists():
-            with open(cache_path, "r") as f:
-                data = json.load(f)
-                return [PubMedAbstract.model_validate(item) for item in data]
-
-        params = {
-            "db": "pubmed",
-            "id": pmid_str,
-            "retmode": "xml",
-        }
-        
-        response = self._make_request("efetch.fcgi", params)
-        abstracts = self._parse_xml(response.text)
-        
-        with open(cache_path, "w") as f:
-            json.dump([a.model_dump() for a in abstracts], f)
+        for i in range(0, len(pmids), batch_size):
+            batch = pmids[i:i + batch_size]
+            pmid_str = ",".join(batch)
+            cache_path = self._get_cache_path("fetch", pmid_str)
             
-        return abstracts
+            if cache_path.exists():
+                try:
+                    with open(cache_path, "r") as f:
+                        data = json.load(f)
+                        all_abstracts.extend([PubMedAbstract.model_validate(item) for item in data])
+                        continue
+                except Exception:
+                    pass
+                    
+            params = {
+                "db": "pubmed",
+                "id": pmid_str,
+                "retmode": "xml",
+            }
+            
+            response = self._make_request("efetch.fcgi", params)
+            batch_abstracts = self._parse_xml(response.text)
+            
+            with open(cache_path, "w") as f:
+                json.dump([a.model_dump() for a in batch_abstracts], f)
+                
+            all_abstracts.extend(batch_abstracts)
+            
+        return all_abstracts
 
     def _parse_xml(self, xml_text: str) -> list[PubMedAbstract]:
         """Parse PubMed efetch XML into objects."""
