@@ -152,6 +152,18 @@ def main():
         json.dump(results, f, indent=2)
     print(f"\nResults saved to {out_path}")
 
+    # Plot
+    try:
+        import matplotlib.pyplot as plt
+        plt.figure(figsize=(6, 4))
+        plt.bar(["Sequential", "Parallel"], [mean_seq, mean_par], yerr=[std_seq, std_par], capsize=5, color=["lightcoral", "lightgreen"])
+        plt.ylabel("Latency (seconds)")
+        plt.title(f"PubMed Retrieval Latency ({n_trials} trials)")
+        plt.tight_layout()
+        plt.savefig(out_dir / "bench_parallel.png")
+    except ImportError:
+        print("matplotlib not installed, skipping plot")
+
 
 if __name__ == "__main__":
     main()

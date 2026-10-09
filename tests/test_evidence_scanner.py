@@ -69,3 +69,70 @@ def test_evidence_scanner_no_results(mock_tool_run, sample_structured_case):
 
     assert isinstance(bundle, EvidenceBundle)
     assert len(bundle.records) == 0
+
+
+@patch("mediagent_lite.tools.pubmed_tool.PubMedTool._run")
+def test_evidence_scanner_pii_scrubbing(mock_tool_run):
+    """Ensure that even if a case contains PII, it is not leaked in the PubMed query."""
+    mock_tool_run.return_value = "No results found"
+    
+    from mediagent_lite.schemas.clinical import StructuredCase, Symptom
+    
+    # Case with blatant PII
+    case_with_pii = StructuredCase(
+        chief_complaint="Patient John Doe (DOB 01/01/1980, ph: 555-0199) living at 123 Main St has chest pain.",
+        symptoms=[Symptom(name="chest pain")],
+    )
+    
+    hypothesis = DiagnosisHypothesis(
+        diagnosis="Acute MI", rank=1, reasoning="", supporting_chunks=[]
+    )
+    
+    agent = EvidenceScanner()
+    agent.extract_chain = MagicMock()
+    agent.extract_chain.invoke.return_value = EvidenceBundle(records=[])
+    
+    agent.process(case_with_pii, hypothesis)
+    
+    # Get the query string passed to PubMed
+    call_kwargs = mock_tool_run.call_args[1]
+    query = call_kwargs["query"]
+    
+    # Assert PII is NOT in the query
+    assert "John Doe" not in query
+    assert "01/01/1980" not in query
+    assert "555-0199" not in query
+    assert "123 Main St" not in query
+    
+    # Assert clinical data IS in the query
+    assert "Acute MI" in query
+    assert "chest pain" in query
+
+
+def test_offline_mode_no_http_calls(monkeypatch):
+    """Ensure setting web_evidence_enabled to False guarantees zero HTTP calls."""
+    from mediagent_lite.config.settings import get_settings
+    
+    settings = get_settings()
+    # Force offline mode
+    monkeypatch.setitem(settings._config["pubmed"], "web_evidence_enabled", False)
+    
+    from mediagent_lite.schemas.clinical import StructuredCase, Symptom
+    
+    case = StructuredCase(
+        chief_complaint="chest pain",
+        symptoms=[Symptom(name="chest pain")],
+    )
+    hypothesis = DiagnosisHypothesis(
+        diagnosis="Acute MI", rank=1, reasoning="", supporting_chunks=[]
+    )
+    
+    agent = EvidenceScanner()
+    
+    # We patch requests.get globally. If the agent makes ANY http call, this will raise.
+    with patch("requests.get", side_effect=Exception("HTTP CALL MADE IN OFFLINE MODE!")) as mock_get:
+        bundle = agent.process(case, hypothesis)
+        
+    assert isinstance(bundle, EvidenceBundle)
+    assert len(bundle.records) == 0
+    mock_get.assert_not_called()

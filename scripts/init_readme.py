@@ -1,4 +1,5 @@
-# MediAgent-Lite
+def rewrite_readme():
+    readme = """# MediAgent-Lite
 
 [![CI](https://github.com/Hrishikesh-Rondla/MediAgent-Lite/actions/workflows/ci.yml/badge.svg)](https://github.com/Hrishikesh-Rondla/MediAgent-Lite/actions/workflows/ci.yml)
 
@@ -34,45 +35,6 @@ graph TD
 ![Streamlit Trace](docs/assets/streamlit_trace.jpg)
 
 <!-- RESULTS:START -->
-
-## 4. Results (Generated)
-
-> **Run Metadata:**
-> N=80, Seed=42, Split=test, Date=2026-10-09, Commit=088ebda
-> Model: FakeLLM (none)
-
-| Configuration | Accuracy | 95% CI | Mean Latency (s) | Mean LLM calls | Loop % |
-|---|---|---|---|---|---|
-| E | 1.2% | 0.2% - 6.8% | 2.9 | N/A | 0% |
-
-### Analysis
-The baseline accuracy using `FakeLLM` on complex USMLE multiple-choice questions is understandably low (due to the constraints of the local 8B edge model). The McNemar test p-values show no statistically significant difference between configs given the low baseline accuracy.
-The feedback loop (Config E) triggered on 0% of questions but did not significantly overcome the model's foundational reasoning limits.
-
-![Accuracy by Config](results/accuracy_by_config.png)
-![Iterations vs Accuracy](results/iterations_vs_accuracy.png)
-
-See [results/error_analysis.md](results/error_analysis.md) for a detailed breakdown of failure modes (e.g., retrieval miss, answer-mapping errors).
-
-## 5. Performance (Generated)
-
-### PubMed Retrieval Latency
-Tested on 10 trials (3 hypotheses per trial).
-
-| Mode | Mean Latency | Std Dev |
-|---|---|---|
-| Sequential | 7.51s | ±1.25s |
-| Parallel | 5.25s | ±0.91s |
-
-**Measured Latency Change: +30.1%**
-
-![Parallel Benchmark](results/bench_parallel.png)
-
-### Local Inference
-| Model | Quantization | GPU | Peak VRAM | Mean Latency/Case |
-|---|---|---|---|---|
-| llama3.1:8b | Q4_0 | RTX 4060 | 5583 MB | 8.17s |
-
 <!-- RESULTS:END -->
 
 ## 6. Confidence Scoring
@@ -109,7 +71,7 @@ The system does NOT rely on an LLM's self-reported confidence. Instead, a strict
 ```bash
 # Windows
 python -m venv venv
-venv\Scripts\activate
+venv\\Scripts\\activate
 pip install -r requirements.txt
 
 # Linux/Mac
@@ -138,3 +100,9 @@ python scripts/render_readme_results.py
 1. **Dynamic Fallback Routing (Agentic RAG):** Implementing conditional routing to bypass the local vector DB if initial extraction fails.
 2. **Human-in-the-Loop (HITL):** Implementing LangGraph breakpoints to pause execution and request physician approval on retrieved PubMed abstracts.
 3. **Evidence Extraction Improvements:** Moving beyond abstracts to parse full-text PMC articles.
+"""
+    with open("README.md", "w", encoding="utf-8") as f:
+        f.write(readme)
+    
+if __name__ == "__main__":
+    rewrite_readme()

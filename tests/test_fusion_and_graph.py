@@ -67,3 +67,57 @@ def test_evaluate_confidence_edge():
     # Test END condition (max iterations reached despite low confidence)
     state_max = {"final_report": report_low, "iteration": 3}
     assert evaluate_confidence(state_max) == "end"
+
+
+def test_deterministic_confidence_math():
+    """Proves the exact paper formula and overrides LLM values.
+    
+    C = 0.35 * S_rag + 0.40 * S_ev + 0.25 * S_concordance
+    """
+    agent = FusionAgent()
+    # Force specific weights for the test to avoid config.yaml changes breaking it
+    agent.settings._config["confidence"] = {"w1": 0.35, "w2": 0.40, "w3": 0.25, "tau": 0.65}
+    
+    # LLM hallucinated confidence = 0.99 (should be overwritten)
+    # LLM hallucinated concordance = 0.1 (should be overwritten)
+    report = DiagnosisReport(
+        diagnosis="TestDx",
+        rank=1,
+        confidence=0.99,
+        concordance=0.1,
+        retrieval_similarity=0.1,
+        weighted_evidence_score=0.1,
+    )
+    
+    # RAG Hypothesis: max supporting chunk similarity = 0.8
+    rag_hyp = {
+        "diagnosis": "TestDx",
+        "supporting_chunks": [{"similarity_score": 0.5}, {"similarity_score": 0.8}]
+    }
+    
+    # PubMed Evidence: RCT (0.8) + Case Report (0.3) = 1.1 -> clamped to 1.0
+    ev_bundles = [
+        EvidenceBundle(
+            records=[
+                EvidenceRecord(hypothesis="TestDx", pmid="1", title="A", classified_type=PublicationType.RCT, evidence_weight=0.8),
+                EvidenceRecord(hypothesis="TestDx", pmid="2", title="B", classified_type=PublicationType.CASE_REPORT, evidence_weight=0.3),
+            ],
+            weighted_scores={"TestDx": 1.1} # This is pre-calculated by Evidence Scanner
+        )
+    ]
+    
+    final_conf = agent._calculate_confidence(report, rag_hyp, ev_bundles)
+    
+    # Hand-calculation:
+    # S_rag = 0.8
+    # S_ev = min(1.0, 1.1) = 1.0
+    # S_concordance: both S_rag and S_ev > 0.3 -> 1.0
+    # C = 0.35 * 0.8 + 0.40 * 1.0 + 0.25 * 1.0 = 0.28 + 0.40 + 0.25 = 0.93
+    
+    import math
+    assert math.isclose(final_conf, 0.93, rel_tol=1e-5)
+    # Prove the LLM's hallucinated values were overwritten
+    assert math.isclose(report.confidence, 0.93, rel_tol=1e-5)
+    assert report.concordance == 1.0
+    assert report.retrieval_similarity == 0.8
+    assert report.weighted_evidence_score == 1.0
