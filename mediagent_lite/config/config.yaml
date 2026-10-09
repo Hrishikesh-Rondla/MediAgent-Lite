@@ -151,7 +151,7 @@ ingestion:
     - "ovarian torsion acute pelvic pain diagnosis"
     - "testicular torsion acute scrotal pain diagnosis"
   max_abstracts_per_query: 50  # ~2100 abstracts total
-  hf_dataset: dux-tecblic/symptom-disease-dataset
+  hf_dataset: Shaheer14326/Disease_Symptoms_Dataset
   hf_split: train
   hf_max_rows: 5000
 

@@ -73,18 +73,20 @@ def ingest_hf_dataset(retriever: ClinicalRetriever, settings):
     docs = []
     for i, row in enumerate(dataset):
         # Format depends on specific dataset schema. 
-        # For dux-tecblic/symptom-disease-dataset, usually has 'symptoms' and 'disease'
-        symptoms = row.get("symptoms", "")
-        disease = row.get("disease", "")
+        # Using Shaheer14326/Disease_Symptoms_Dataset
+        disease = row.get("Disease", "")
+        symptoms = row.get("Symptoms", "")
+        overview = row.get("Overview", "")
         
         if not symptoms or not disease:
             continue
             
-        text = f"Disease: {disease}\nSymptoms: {symptoms}"
+        text = f"Disease: {disease}\nOverview: {overview}\nSymptoms: {symptoms}"
         metadata = {
             "source": "hf_dataset",
             "source_id": f"hf_{i}",
             "disease": disease,
+            "url": row.get("Link", "")
         }
         docs.extend(chunk_document(text, metadata))
         
