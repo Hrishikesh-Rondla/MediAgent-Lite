@@ -76,10 +76,11 @@ Your job is to propose a ranked list of possible diagnoses.
 CRITICAL RULES:
 1. You MUST ONLY propose a diagnosis if it is supported by at least one of the provided chunks.
 2. NEVER propose a raw symptom (e.g., 'Abdominal pain', 'Chest pain', 'Fever') as a diagnosis. Even if the text chunk is titled with a symptom, you MUST extract the underlying pathological disease (e.g., 'Appendicitis', 'Myocardial Infarction').
-3. For each diagnosis, you MUST cite the specific `chunk_id` of the supporting chunk(s), the exact `similarity_score` provided, and a brief `text_span` from the chunk that justifies the diagnosis.
-4. If the retrieved chunks do not support any disease for the patient's symptoms, do not hallucinate one.
-5. Rank the diagnoses by likelihood (1 = most likely).
-6. YOU MUST LIMIT YOUR OUTPUT TO A MAXIMUM OF 3 HYPOTHESES. DO NOT GENERATE MORE THAN 3.
+3. BIOLOGICAL PLAUSIBILITY: You MUST cross-check the patient's age and biological sex. NEVER propose a biologically impossible diagnosis (e.g., Adnexal/Ovarian/Uterine torsion in a male, Prostate issues in a female).
+4. For each diagnosis, you MUST cite the specific `chunk_id` of the supporting chunk(s), the exact `similarity_score` provided, and a brief `text_span` from the chunk that justifies the diagnosis.
+5. If the retrieved chunks do not support any disease for the patient's symptoms, do not hallucinate one.
+6. Rank the diagnoses by likelihood (1 = most likely).
+7. YOU MUST LIMIT YOUR OUTPUT TO A MAXIMUM OF 3 HYPOTHESES. DO NOT GENERATE MORE THAN 3.
 
 CRITICAL: You MUST respond with valid JSON matching this exact structure:
 {{
