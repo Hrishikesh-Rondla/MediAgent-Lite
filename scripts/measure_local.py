@@ -1,8 +1,10 @@
 import json
-import time
 import subprocess
+import time
 from pathlib import Path
+
 from mediagent_lite.graph.orchestrator import build_graph
+
 
 def get_peak_vram():
     try:
@@ -22,8 +24,10 @@ def main():
     }
     
     # Warmup
-    try: get_peak_vram() 
-    except: pass
+    try:
+        get_peak_vram() 
+    except Exception:
+        pass
 
     t0 = time.perf_counter()
     graph.invoke(state)

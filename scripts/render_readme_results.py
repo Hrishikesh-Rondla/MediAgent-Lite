@@ -1,6 +1,7 @@
 import json
 from pathlib import Path
 
+
 def main():
     results_dir = Path("results")
     readme_path = Path("README.md")

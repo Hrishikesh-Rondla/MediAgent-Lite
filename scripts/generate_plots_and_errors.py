@@ -1,6 +1,8 @@
 import json
 from pathlib import Path
+
 import matplotlib.pyplot as plt
+
 
 def main():
     results_dir = Path("results")
