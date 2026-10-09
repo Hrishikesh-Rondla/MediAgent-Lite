@@ -129,10 +129,16 @@ ingestion:
     - "urinary tract infection diagnosis"
     - "asthma COPD differential"
     - "meningitis diagnosis"
-  max_abstracts_per_query: 15  # ~300 abstracts total
+    - "pancreatitis acute diagnosis"
+    - "cholecystitis gallstone diagnosis"
+    - "tuberculosis diagnosis"
+    - "peptic ulcer disease diagnosis"
+    - "heart failure exacerbation diagnosis"
+    - "cellulitis abscess diagnosis"
+  max_abstracts_per_query: 50  # ~1300 abstracts total
   hf_dataset: dux-tecblic/symptom-disease-dataset
   hf_split: train
-  hf_max_rows: 500
+  hf_max_rows: 5000
 
 # ── Evaluation ──────────────────────────────────────────────────────────────
 eval:

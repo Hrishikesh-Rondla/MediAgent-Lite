@@ -46,31 +46,33 @@ class ClinicalRetriever:
         if not documents:
             return
 
-        texts = [doc.page_content for doc in documents]
-        embeddings = self.embedder.embed_documents(texts)
-        
-        points = []
-        for doc, emb in zip(documents, embeddings):
-            # We use a UUID based on the content and metadata so it's deterministic/idempotent
-            doc_id = str(uuid.uuid5(uuid.NAMESPACE_DNS, f"{doc.metadata.get('source_id', '')}_{doc.metadata.get('chunk_index', 0)}"))
-            
-            points.append(
-                PointStruct(
-                    id=doc_id,
-                    vector=emb,
-                    payload={
-                        "page_content": doc.page_content,
-                        **doc.metadata
-                    }
-                )
-            )
-            
-        # Upsert in batches
         batch_size = 100
-        for i in range(0, len(points), batch_size):
+        for i in range(0, len(documents), batch_size):
+            batch_docs = documents[i:i + batch_size]
+            texts = [doc.page_content for doc in batch_docs]
+            
+            # Embed in batches to prevent OOM on local transformers
+            embeddings = self.embedder.embed_documents(texts)
+            
+            points = []
+            for doc, emb in zip(batch_docs, embeddings):
+                # We use a UUID based on the content and metadata so it's deterministic/idempotent
+                doc_id = str(uuid.uuid5(uuid.NAMESPACE_DNS, f"{doc.metadata.get('source_id', '')}_{doc.metadata.get('chunk_index', 0)}"))
+                
+                points.append(
+                    PointStruct(
+                        id=doc_id,
+                        vector=emb,
+                        payload={
+                            "page_content": doc.page_content,
+                            **doc.metadata
+                        }
+                    )
+                )
+                
             self.client.upsert(
                 collection_name=self.collection_name,
-                points=points[i:i + batch_size]
+                points=points
             )
 
     def _search(self, query: str, limit: int, threshold: float) -> list[tuple[Document, float]]:
