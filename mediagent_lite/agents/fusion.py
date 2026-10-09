@@ -37,6 +37,7 @@ Your job:
 1. Synthesize this into a final FusedReport.
 2. Evaluate conflicts: Does the new PubMed evidence contradict the RAG hypotheses? If so, flag a conflict.
 3. Calculate a rough initial confidence score (0.0 to 1.0) for each diagnosis. The system will refine this later, but provide your best clinical estimate based on the evidence.
+4. NEVER output a generic symptom (e.g., 'Abdominal pain', 'Chest pain') as a final diagnosis. If the RAG hypothesis is just a symptom, refine it to the underlying disease (e.g., 'Appendicitis', 'Myocardial Infarction').
 """),
             ("human", """Patient Case:
 {case_json}
