@@ -31,7 +31,7 @@ graph TD
 ## 3. Dashboard Traces
 *(See the Streamlit application for interactive traces of the LangGraph execution, iteration timelines, and chunk-level text spans for grounded evidence).*
 
-![Streamlit Trace](docs/assets/streamlit_trace.jpg)
+![Streamlit Trace](docs/assets/streamlit_trace.png)
 
 <!-- RESULTS:START -->
 
