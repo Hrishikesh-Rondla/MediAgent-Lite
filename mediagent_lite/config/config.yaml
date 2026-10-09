@@ -135,7 +135,22 @@ ingestion:
     - "peptic ulcer disease diagnosis"
     - "heart failure exacerbation diagnosis"
     - "cellulitis abscess diagnosis"
-  max_abstracts_per_query: 50  # ~1300 abstracts total
+    - "rheumatoid arthritis diagnosis criteria"
+    - "systemic lupus erythematosus diagnosis"
+    - "multiple sclerosis diagnosis MRI"
+    - "parkinson disease early diagnosis"
+    - "inflammatory bowel disease crohns ulcerative colitis diagnosis"
+    - "cirrhosis liver failure diagnosis"
+    - "deep vein thrombosis DVT diagnosis ultrasound"
+    - "atrial fibrillation ECG diagnosis"
+    - "endocarditis infectious diagnosis criteria"
+    - "lyme disease tick bite diagnosis"
+    - "hiv aids opportunistic infection diagnosis"
+    - "glaucoma acute angle closure diagnosis"
+    - "ectopic pregnancy ultrasound diagnosis"
+    - "ovarian torsion acute pelvic pain diagnosis"
+    - "testicular torsion acute scrotal pain diagnosis"
+  max_abstracts_per_query: 50  # ~2100 abstracts total
   hf_dataset: dux-tecblic/symptom-disease-dataset
   hf_split: train
   hf_max_rows: 5000
